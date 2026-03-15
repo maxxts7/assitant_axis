@@ -10,7 +10,7 @@ set -euo pipefail
 MODEL="${MODEL:-Qwen/Qwen3-32B}"
 OUT="${OUT:-/workspace/test-generate/responses}"
 QUESTION_COUNT="${QUESTION_COUNT:-10}"
-TP_SIZE="${TP_SIZE:-}"
+TP_SIZE="${TP_SIZE:-3}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
