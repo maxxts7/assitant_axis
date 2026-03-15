@@ -15,6 +15,32 @@ TP_SIZE="${TP_SIZE:-}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
+# ── Install dependencies ─────────────────────────────────────────────────────
+echo "Installing dependencies..."
+
+# Install uv if not present
+if ! command -v uv &> /dev/null; then
+    echo "Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    source "$HOME/.local/bin/env"
+fi
+
+# Redirect HuggingFace cache to persistent storage
+export HF_HOME="${HF_HOME:-/workspace/huggingface_cache}"
+
+# Install project dependencies
+cd "$PROJECT_DIR"
+uv sync
+
+# Verify GPU
+if ! uv run python3 -c "import torch; assert torch.cuda.is_available()" 2>/dev/null; then
+    echo "ERROR: No CUDA GPU detected."
+    exit 1
+fi
+
+GPU_COUNT=$(uv run python3 -c "import torch; print(torch.cuda.device_count())")
+echo "GPUs detected: $GPU_COUNT"
+
 TP_ARG=""
 if [ -n "$TP_SIZE" ]; then
     TP_ARG="--tensor_parallel_size $TP_SIZE"
