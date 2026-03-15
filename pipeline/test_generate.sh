@@ -25,6 +25,14 @@ if ! command -v uv &> /dev/null; then
     source "$HOME/.local/bin/env"
 fi
 
+# Set HuggingFace token from RunPod secret
+if [ -n "${RUNPOD_SECRET_hf_token:-}" ]; then
+    export HUGGING_FACE_HUB_TOKEN="$RUNPOD_SECRET_hf_token"
+    echo "HF token loaded from RUNPOD_SECRET_hf_token"
+elif [ -z "${HUGGING_FACE_HUB_TOKEN:-}" ]; then
+    echo "WARNING: No HuggingFace token found. Gated models (e.g. Llama) will fail."
+fi
+
 # Redirect HuggingFace cache to persistent storage
 export HF_HOME="${HF_HOME:-/workspace/huggingface_cache}"
 
