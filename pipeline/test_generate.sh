@@ -10,7 +10,7 @@ set -euo pipefail
 MODEL="${MODEL:-Qwen/Qwen3-32B}"
 OUT="${OUT:-/workspace/test-generate/responses}"
 QUESTION_COUNT="${QUESTION_COUNT:-10}"
-TP_SIZE="${TP_SIZE:-3}"
+TP_SIZE="${TP_SIZE:-4}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
@@ -66,6 +66,7 @@ uv run "$PROJECT_DIR/pipeline/1_generate.py" \
     --output_dir "$OUT" \
     --question_count "$QUESTION_COUNT" \
     --roles default pirate therapist demon altruist \
+    --gpu_memory_utilization 0.65 \
     $TP_ARG
 
 echo ""
