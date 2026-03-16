@@ -32,6 +32,7 @@ fi
 # Install project dependencies
 cd "$PROJECT_DIR"
 uv sync
+export OPENAI_API_KEY="${OPENAI_API_KEY:-}"
 
 # ── Check API key ────────────────────────────────────────────────────────────
 if [ -z "${OPENAI_API_KEY:-}" ]; then
